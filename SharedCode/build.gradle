@@ -43,16 +43,16 @@ task packForXCode(type: Sync) {
     }
     into frameworkDir
 
-    doLast {
-        new File(frameworkDir, 'gradlew').with {
-            text = """\
-                    #!/bin/bash
-                    export 'JAVA_HOME=${System.getProperty('java.home')}'
-                    cd '${rootProject.rootDir}'
-                    ./gradlew \$@
-            """.stripIndent()
-        }
-    }
+//    doLast {
+//        new File(frameworkDir, 'gradlew').with {
+//            text = """\
+//                    #!/bin/bash
+//                    export 'JAVA_HOME=${System.getProperty('java.home')}'
+//                    cd '${rootProject.rootDir}'
+//                    ./gradlew \$@
+//            """.stripIndent()
+//        }
+//    }
 }
 
 tasks.build.dependsOn packForXCode

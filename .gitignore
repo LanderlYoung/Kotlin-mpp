@@ -25,6 +25,10 @@ out
 #MAC OS X
 .DS_Store
 
+#xcode
+ios/KotlinMppIos.xcodeproj/project.xcworkspace/xcuserdata/
+ios/KotlinMppIos.xcodeproj/xcuserdata/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
