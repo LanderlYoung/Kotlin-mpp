@@ -230,7 +230,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd $SRCROOT/..\n./gradlew :SharedCode:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
+			shellScript = "cd $SRCROOT/..\n./gradlew :SharedCode:packForXCode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

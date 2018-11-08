@@ -2,8 +2,13 @@ apply plugin: 'kotlin-multiplatform'
 
 kotlin {
     targets {
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ?
-                presets.iosArm64 : presets.iosX64
+        // this is a ENV generated in XCode build context
+        final def sdkName = System.getenv('SDK_NAME')
+        final def iOSTarget = sdkName?.startsWith("iphoneos") ?
+                // build to iphone devices
+                presets.iosArm64 :
+                // build to simulator
+                presets.iosX64
 
         fromPreset(iOSTarget, 'iOS') {
             compilations.main.outputKinds('FRAMEWORK')
@@ -20,6 +25,10 @@ kotlin {
         androidMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib'
         }
+
+        iosMain.dependencies {
+
+        }
     }
 }
 
@@ -32,7 +41,7 @@ task packForXCode(type: Sync) {
     group = 'build'
     
     def frameworkDir = new File(buildDir, 'xcode-frameworks')
-    def mode = project.findProperty('XCODE_CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
+    def mode = System.getenv('XCODE_CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
 
     inputs.property 'mode', mode
 
@@ -42,17 +51,6 @@ task packForXCode(type: Sync) {
         kotlin.targets.iOS.compilations.main.getBinary('FRAMEWORK', mode).parentFile
     }
     into frameworkDir
-
-//    doLast {
-//        new File(frameworkDir, 'gradlew').with {
-//            text = """\
-//                    #!/bin/bash
-//                    export 'JAVA_HOME=${System.getProperty('java.home')}'
-//                    cd '${rootProject.rootDir}'
-//                    ./gradlew \$@
-//            """.stripIndent()
-//        }
-//    }
 }
 
 tasks.build.dependsOn packForXCode
