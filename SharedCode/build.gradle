@@ -47,7 +47,7 @@ task packForXCode(type: Sync) {
         new File(frameworkDir, 'gradlew').with {
             text = """\
                     #!/bin/bash
-                    export 'JAVA_HOME=${System.getProperty('java.home')}
+                    export 'JAVA_HOME=${System.getProperty('java.home')}'
                     cd '${rootProject.rootDir}'
                     ./gradlew \$@
             """.stripIndent()
