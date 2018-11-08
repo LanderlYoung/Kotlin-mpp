@@ -1,4 +1,4 @@
-package io.github.landerlyoung.kotlinnativempp
+package io.github.landerlyoung.kotlin.mpp
 
 import org.junit.Test
 
