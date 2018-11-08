@@ -23,6 +23,36 @@ kotlin {
     }
 }
 
+// workaround for https://youtrack.jetbrains.com/issue/KT-27170
 configurations {
     compileClassPath
 }
+
+task packForXCode(type: Sync) {
+    group = 'build'
+    
+    def frameworkDir = new File(buildDir, 'xcode-frameworks')
+    def mode = project.findProperty('XCODE_CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
+
+    inputs.property 'mode', mode
+
+    dependsOn kotlin.targets.iOS.compilations.main.linkTaskName('FRAMEWORK', mode)
+
+    from {
+        kotlin.targets.iOS.compilations.main.getBinary('FRAMEWORK', mode).parentFile
+    }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = """\
+                    #!/bin/bash
+                    export 'JAVA_HOME=${System.getProperty('java.home')}
+                    cd '${rootProject.rootDir}'
+                    ./gradlew \$@
+            """.stripIndent()
+        }
+    }
+}
+
+tasks.build.dependsOn packForXCode
