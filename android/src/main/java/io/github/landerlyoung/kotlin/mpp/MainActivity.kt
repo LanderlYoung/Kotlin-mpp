@@ -1,6 +1,7 @@
 package io.github.landerlyoung.kotlin.mpp
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
@@ -13,7 +14,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<TextView>(R.id.text).text = createApplicationScreenMessage()
+        findViewById<TextView>(R.id.text).let {
+            it.text = createApplicationScreenMessage()
+            Snackbar.make(it, createApplicationScreenMessage(), Snackbar.LENGTH_SHORT)
+                    .show()
+        }
 
         GlobalScope.launch {
             println(ZhihuDailyRepository.getLatestStories())

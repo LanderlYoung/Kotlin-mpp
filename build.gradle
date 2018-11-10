@@ -10,7 +10,7 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-        maven { url "https://kotlin.bintray.com/kotlinx" }
+        maven { url 'https://kotlin.bintray.com/kotlinx' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$agp_version"
@@ -23,8 +23,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-        maven { url "https://kotlin.bintray.com/kotlinx" }
+        maven { url 'https://kotlin.bintray.com/kotlinx' }
     }
 }
 

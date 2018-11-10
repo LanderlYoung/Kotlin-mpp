@@ -1,7 +1,6 @@
 #gradle
 .gradle
 build
-classes
 local.properties
 
 #gradel ndk plugin
@@ -22,6 +21,8 @@ gdbserver
 *.iml
 .idea
 out
+captures
+classes
 
 #MAC OS X
 .DS_Store

@@ -20,12 +20,12 @@ object ZhihuDailyRepository {
     private inline fun <T> String.toJson(serializer: DeserializationStrategy<T>): T =
             json.parse(serializer, this)
 
-    fun getLatestStories(): LatestStories {
+    suspend fun getLatestStories(): LatestStories {
         return httpGet("https://news-at.zhihu.com/api/4/news/latest")
                 .toJson(LatestStories.serializer())
     }
 
-    fun getStoryContent(newsId: Long): Story {
+    suspend fun getStoryContent(newsId: Long): Story {
         return httpGet("https://news-at.zhihu.com/api/4/news/$newsId")
                 .toJson(Story.serializer())
     }
