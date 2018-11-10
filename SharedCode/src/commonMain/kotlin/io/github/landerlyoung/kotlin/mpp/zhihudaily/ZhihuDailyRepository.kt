@@ -36,7 +36,7 @@ object ZhihuDailyRepository {
                 <head>
                     <title>${story.title}</title>
                     ${story.css.foldRight(StringBuilder()) { css, sb ->
-            sb.append("<link rel=\"stylesheet\" href=\"$css\" type=\"text/css\" />")
+            sb.append("<link rel=\"stylesheet\" href=\"$css\" type=\"text/css\" ></link>")
         }}
                 </head>
                 <body>

@@ -3,10 +3,8 @@ package io.github.landerlyoung.kotlin.mpp
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.widget.TextView
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,10 +17,14 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(it, createApplicationScreenMessage(), Snackbar.LENGTH_SHORT)
                     .show()
         }
+    }
 
-        GlobalScope.launch {
-            println(ZhihuDailyRepository.getLatestStories())
-            println(ZhihuDailyRepository.getStoryContent(3892357))
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            if (supportFragmentManager.popBackStackImmediate()) {
+                return true
+            }
         }
+        return super.onOptionsItemSelected(item)
     }
 }

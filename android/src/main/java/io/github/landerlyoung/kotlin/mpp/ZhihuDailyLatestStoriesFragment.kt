@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.ContentLoadingProgressBar
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -38,6 +41,10 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
             field = value
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -77,7 +84,14 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
                 }
             }
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        (activity as AppCompatActivity?)?.supportActionBar?.let {actionBar ->
+            actionBar.title = getString(R.string.zhihudaily_title)
+            actionBar.setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     inner class LatestStoriesRecyclerViewAdapter :
@@ -112,7 +126,7 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
                     story?.let { story ->
                         activity!!.supportFragmentManager.beginTransaction()
                                 .replace(this@ZhihuDailyLatestStoriesFragment.id,
-                                        StoryDetailFragment.newInstance(story.id))
+                                        StoryDetailFragment.newInstance(story))
                                 .addToBackStack(null)
                                 .commit()
                     }
