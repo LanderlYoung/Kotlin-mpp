@@ -19,11 +19,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+            api "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
         }
 
         androidMain.dependencies {
-            api 'org.jetbrains.kotlin:kotlin-stdlib'
+            api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         }
 
         iosMain.dependencies {
