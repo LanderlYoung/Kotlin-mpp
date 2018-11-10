@@ -1,5 +1,6 @@
 package io.github.landerlyoung.kotlin.mpp
 
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -41,7 +42,16 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false) as ViewGroup
-        view.findViewById<RecyclerView>(R.id.list).adapter = adapter
+        view.findViewById<RecyclerView>(R.id.list).let {
+            it.adapter = adapter
+            it.addItemDecoration(object : RecyclerView.ItemDecoration() {
+                val margin = resources.getDimensionPixelSize(R.dimen.card_margin)
+                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                    outRect.top = margin
+                    outRect.bottom = margin
+                }
+            })
+        }
         loadingProgress = view.findViewById(R.id.loading_progress_bar)
         return view
     }
@@ -77,7 +87,6 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
 
         fun setLatestStories(data: LatestStories) {
             latestStories.clear()
-            latestStories.addAll(data.top_stories)
             latestStories.addAll(data.stories)
             notifyDataSetChanged()
         }
