@@ -1,6 +1,7 @@
 #gradle
 .gradle
 build
+classes
 local.properties
 
 #gradel ndk plugin

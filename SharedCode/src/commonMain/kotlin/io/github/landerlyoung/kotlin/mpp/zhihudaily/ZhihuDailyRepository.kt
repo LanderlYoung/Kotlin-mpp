@@ -1,6 +1,10 @@
 package io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily
 
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.httpGet
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.json.JSON
 
 /**
  * <pre>
@@ -11,11 +15,18 @@ import io.github.landerlyoung.kotlin.mpp.zhihudaily.httpGet
  * </pre>
  */
 object ZhihuDailyRepository {
-    fun getLatestNews(): String {
+    private val json = JSON(strictMode = false)
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun <T> String.toJson(serializer: DeserializationStrategy<T>): T =
+            json.parse(serializer, this)
+
+    fun getLatestStories(): LatestStories {
         return httpGet("https://news-at.zhihu.com/api/4/news/latest")
+                .toJson(LatestStories.serializer())
     }
 
-    fun getNewsContent(newsId: Long): String {
+    fun getStoryContent(newsId: Long): Story {
         return httpGet("https://news-at.zhihu.com/api/4/news/$newsId")
+                .toJson(Story.serializer())
     }
 }

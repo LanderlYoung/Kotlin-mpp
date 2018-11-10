@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.text).text = createApplicationScreenMessage()
 
         GlobalScope.launch {
-            println(ZhihuDailyRepository.getLatestNews())
-            println(ZhihuDailyRepository.getNewsContent(3892357))
+            println(ZhihuDailyRepository.getLatestStories())
+            println(ZhihuDailyRepository.getStoryContent(3892357))
         }
     }
 }
