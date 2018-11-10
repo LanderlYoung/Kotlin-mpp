@@ -80,7 +80,7 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
 
     }
 
-    class LatestStoriesRecyclerViewAdapter :
+    inner class LatestStoriesRecyclerViewAdapter :
             RecyclerView.Adapter<LatestStoriesRecyclerViewAdapter.ViewHolder>() {
 
         private val latestStories = mutableListOf<Story>()
@@ -107,8 +107,21 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
             private val cover: ImageView = view.cover
             private val title: TextView = view.title
 
+            init {
+                view.setOnClickListener {
+                    story?.let { story ->
+                        activity!!.supportFragmentManager.beginTransaction()
+                                .replace(this@ZhihuDailyLatestStoriesFragment.id,
+                                        StoryDetailFragment.newInstance(story.id))
+                                .addToBackStack(null)
+                                .commit()
+                    }
+                }
+            }
+
             var story: Story? = null
                 set(value) {
+                    field = value
                     title.text = value?.title
                     Glide.with(cover)
                             .load(value?.let { Uri.parse(it.image) })

@@ -44,3 +44,36 @@ data class Story(
     val image: String?
         get() = _image ?: images.firstOrNull()
 }
+
+@Serializable
+data class StoryContent(
+        @Optional
+        val id: Long = 0,
+        @Optional
+        val type: Int = 0,
+        @Optional
+        val title: String = "",
+        @Optional
+        val body: String = "",
+        @Optional
+        val js: List<String> = emptyList(),
+        @Optional
+        val css: List<String> = emptyList(),
+        @Optional
+        val share_url: String = "",
+        @Optional
+        val recommenders: List<String> = emptyList(),
+        @Optional
+        val ga_prefix: Int = 0,
+        @Optional
+        val image_source: String = "",
+        @Optional
+        @SerialName("image")
+        private val _image: String? = null,
+        @Optional
+        val images: List<String> = emptyList()
+) {
+    @Transient
+    val image: String?
+        get() = _image ?: images.firstOrNull()
+}

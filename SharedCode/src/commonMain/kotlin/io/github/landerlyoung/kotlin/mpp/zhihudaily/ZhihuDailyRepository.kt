@@ -1,7 +1,7 @@
 package io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily
 
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.httpGet
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JSON
@@ -25,8 +25,28 @@ object ZhihuDailyRepository {
                 .toJson(LatestStories.serializer())
     }
 
-    suspend fun getStoryContent(newsId: Long): Story {
+    suspend fun getStoryContent(newsId: Long): StoryContent {
         return httpGet("https://news-at.zhihu.com/api/4/news/$newsId")
-                .toJson(Story.serializer())
+                .toJson(StoryContent.serializer())
+    }
+
+    fun makeHtml(story: StoryContent): String {
+        return """
+            <html>
+                <head>
+                    <title>${story.title}</title>
+                    ${story.css.foldRight(StringBuilder()) { css, sb ->
+            sb.append("<link rel=\"stylesheet\" href=\"$css\" type=\"text/css\" />")
+        }}
+                </head>
+                <body>
+                    ${story.body}
+                    ${story.js.foldRight(StringBuilder()) { js, sb ->
+            sb.append("<script src=\"$js\"></script>")
+        }
+        }
+                </body>
+            </html>
+        """.trimIndent()
     }
 }
