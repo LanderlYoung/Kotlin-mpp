@@ -12,8 +12,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 import android.webkit.WebView
+import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContentRenderer
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 
-class StoryDetailFragment : Fragment() {
+class StoryContentFragment : Fragment() {
 
     private var storyId: Long = 0
     private var storyTitle: String? = null
@@ -65,6 +67,13 @@ class StoryDetailFragment : Fragment() {
                     mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
                 }
             }
+            webView.webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    if (newProgress >= 100) {
+                        loading = false
+                    }
+                }
+            }
         }
     }
 
@@ -84,10 +93,8 @@ class StoryDetailFragment : Fragment() {
             }
             if (detail != null) {
                 withContext(Dispatchers.Main) {
-                    loading = false
-                    webView.loadDataWithBaseURL("x-data://base",
-                            ZhihuDailyRepository.makeHtml(detail)
-                                    .replace("<div class=\"img-place-holder\">", ""),
+                    webView.loadDataWithBaseURL(null,
+                            StoryContentRenderer.makeHtml(detail),
                             "text/html ",
                             "UTF-8",
                             null)
@@ -113,7 +120,7 @@ class StoryDetailFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(storyId: Long) =
-                StoryDetailFragment().apply {
+                StoryContentFragment().apply {
                     arguments = Bundle().apply {
                         putLong(KEL_STORY_ID, storyId)
                     }
@@ -121,7 +128,7 @@ class StoryDetailFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(story: Story) =
-                StoryDetailFragment().apply {
+                StoryContentFragment().apply {
                     arguments = Bundle().apply {
                         putLong(KEL_STORY_ID, story.id)
                         putString(KEL_STORY_TITLE, story.title)

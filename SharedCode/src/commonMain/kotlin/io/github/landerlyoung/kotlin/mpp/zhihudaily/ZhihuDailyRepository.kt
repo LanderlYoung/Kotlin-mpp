@@ -29,24 +29,4 @@ object ZhihuDailyRepository {
         return httpGet("https://news-at.zhihu.com/api/4/news/$newsId")
                 .toJson(StoryContent.serializer())
     }
-
-    fun makeHtml(story: StoryContent): String {
-        return """
-            <html>
-                <head>
-                    <title>${story.title}</title>
-                    ${story.css.foldRight(StringBuilder()) { css, sb ->
-            sb.append("<link rel=\"stylesheet\" href=\"$css\" type=\"text/css\" ></link>")
-        }}
-                </head>
-                <body>
-                    ${story.body}
-                    ${story.js.foldRight(StringBuilder()) { js, sb ->
-            sb.append("<script src=\"$js\"></script>")
-        }
-        }
-                </body>
-            </html>
-        """.trimIndent()
-    }
 }

@@ -126,7 +126,7 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
                     story?.let { story ->
                         activity!!.supportFragmentManager.beginTransaction()
                                 .replace(this@ZhihuDailyLatestStoriesFragment.id,
-                                        StoryDetailFragment.newInstance(story))
+                                        StoryContentFragment.newInstance(story))
                                 .addToBackStack(null)
                                 .commit()
                     }
