@@ -14,39 +14,38 @@ object StoryContentRenderer {
 
     fun makeHtml(story: StoryContent): String {
         return """
-            <html>
-                <head>
-                    <title>${story.title}</title>
-                    ${story.css.foldRight(StringBuilder()) { css, sb ->
+<html>
+    <head>
+        <title>${story.title}</title>
+        ${story.css.foldRight(StringBuilder()) { css, sb ->
             sb.append("<link rel=\"stylesheet\" href=\"$css\" type=\"text/css\"></link>")
         }}
-                </head>
-                <body>
-                        ${story.body}
-                   ${story.js.foldRight(StringBuilder()) { js, sb ->
+    </head>
+    <body>
+       ${story.body}
+       ${story.js.foldRight(StringBuilder()) { js, sb ->
             sb.append("<script src=\"$js\"></script>")
-        }
-        }
-                    <style>
-                        $headerImageStyle
-                    </style>
-                 <script>
-                        var imgph = document.getElementsByClassName('img-place-holder')[0]
-                        if (imgph != undefined) {
-                            imgph.className = 'img-wrap'
-                            imgph.innerHTML = '<h1 class=\"headline-title\">${story.title}</h1>' +
-                            '<span class="img-source">${story.image_source}</span>' +
-                            '<img src="${story.image}" alt="">' +
-                            '<div class="img-mask"></div>'
-                        }
-                 </script>
-                </body>
-            </html>
-        """
+        }}
+       <style>
+           $headerImageStyle
+       </style>
+       <script>
+            var banner = document.getElementsByClassName('img-place-holder')[0]
+            if (banner != undefined) {
+                banner.className = 'img-wrap'
+                banner.innerHTML = '<h1 class=\"headline-title\">${story.title}</h1>' +
+                '<span class="img-source">${story.image_source}</span>' +
+                '<img src="${story.image}" alt="">' +
+                '<div class="img-mask"></div>'
+            }
+     </script>
+    </body>
+</html>
+"""
     }
 
     private const val headerImageStyle =
-"""
+            """
 .img-wrap {
     position: relative;
     max-height: 375px;
@@ -68,6 +67,15 @@ object StoryContentRenderer {
     text-shadow: 0px 1px 2px rgba(0,0,0,.3);
 }
 
+.img-wrap .headline-title {
+    margin: 20px 0;
+    bottom: 10px;
+    z-index: 1;
+    position: absolute;
+    color: white;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+}
+
 .img-mask {
     position: absolute;
     top: 0;
@@ -87,15 +95,6 @@ object StoryContentRenderer {
     /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#99000000',GradientType=0 );
     /* IE6-9 */
-}
-
-.img-wrap .headline-title {
-    margin: 20px 0;
-    bottom: 10px;
-    z-index: 1;
-    position: absolute;
-    color: white;
-    text-shadow: 0px 1px 2px rgba(0,0,0,0.3);
 }
 """
 }
