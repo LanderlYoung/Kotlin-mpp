@@ -19,8 +19,7 @@ import com.bumptech.glide.Glide
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
-import kotlinx.android.synthetic.main.fragment_item.view.cover
-import kotlinx.android.synthetic.main.fragment_item.view.title
+import kotlinx.android.synthetic.main.fragment_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -125,6 +124,11 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
                 view.setOnClickListener {
                     story?.let { story ->
                         activity!!.supportFragmentManager.beginTransaction()
+                                .setCustomAnimations(
+                                        R.anim.enter,
+                                        R.anim.exit,
+                                        R.anim.pop_enter,
+                                        R.anim.pop_exit)
                                 .replace(this@ZhihuDailyLatestStoriesFragment.id,
                                         StoryContentFragment.newInstance(story))
                                 .addToBackStack(null)
