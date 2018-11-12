@@ -1,2 +1,7 @@
+// Kotlin/Native's Library ultilize Gradle MetaData feature!
+// Do Enable The Feature!
+
+enableFeaturePreview('GRADLE_METADATA')
+
 include ':android'
 include ':SharedCode'
