@@ -1,4 +1,4 @@
-// Kotlin/Native's Library ultilize Gradle MetaData feature!
+// Kotlin/Native's Library utilizes Gradle MetaData feature!
 // Do Enable The Feature!
 
 enableFeaturePreview('GRADLE_METADATA')
