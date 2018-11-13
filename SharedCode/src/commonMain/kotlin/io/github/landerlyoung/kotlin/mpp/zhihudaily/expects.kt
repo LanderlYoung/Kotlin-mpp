@@ -1,3 +1,3 @@
 package io.github.landerlyoung.kotlin.mpp.zhihudaily
 
-expect fun httpGet(url: String): String
+expect suspend fun httpGet(url: String): String

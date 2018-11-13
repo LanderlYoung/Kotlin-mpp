@@ -4,7 +4,7 @@ import kotlinx.io.IOException
 import java.net.URL
 
 @Throws(IOException::class)
-actual fun httpGet(url: String): String {
+actual suspend fun httpGet(url: String): String {
     try {
         val httpConn = URL(url).openConnection()
         httpConn.connect()

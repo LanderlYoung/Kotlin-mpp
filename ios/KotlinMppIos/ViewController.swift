@@ -16,6 +16,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.text = CommonKt.createApplicationScreenMessage()
+
+        do {
+            let str = try ActualKt_.nonSuspendHttpGet(url: "https://www.qq.com/")
+            print(str)
+        } catch let error as NSError {
+            print(error)
+        }
     }
 }
 
