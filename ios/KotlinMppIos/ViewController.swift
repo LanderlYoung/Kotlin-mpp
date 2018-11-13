@@ -10,40 +10,86 @@ import UIKit
 import SharedCode
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var textField: UITextField!
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    private let presenter = LatestStoryPresenter()
+    
+    private let dataSource = ZhihuTableViewDelegate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.text = CommonKt.createApplicationScreenMessage()
-
-        do {
-            let str = try ActualKt_.nonSuspendHttpGet(url: "https://www.qq.com/")
-            print(str)
-        } catch let error as NSError {
-            print(error)
+        tableView.dataSource = dataSource
+        
+        presenter.onLoadingStatusChange = { [unowned self] loading in
+            if (loading.boolValue) {
+                
+            } else {
+                
+            }
+            print("loading \(loading.boolValue)")
+            return KotlinUnit()
         }
+        
+        presenter.onError = { [unowned self] error in
+            let alertController = UIAlertController(title: "Error", message: error.message, preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+            alertController.addAction(alertAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+            print("error \(String(describing: error.message))")
+            return KotlinUnit()
+        }
+        
+        presenter.onLoadData = { [unowned self] latestStories in
+            self.dataSource.data.removeAll()
+            self.dataSource.data.append(contentsOf: latestStories.stories)
+            self.tableView.reloadData()
+            return KotlinUnit()
+        }
+        
+        presenter.onActivate()
     }
-
-    func test() {
-        //  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        //    [request setHTTPMethod:@"GET"];
-        //    [request setURL:[NSURL URLWithString:url]];
-        //
-        //    NSError *error = nil;
-        //    NSHTTPURLResponse *responseCode = nil;
-        //
-        //    NSData *oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
-        //
-        //    if([responseCode statusCode] != 200){
-        //        NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
-        //        return nil;
-        //    }
-        //
-        //    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
-//        let req = URLRequest(url: URL(string: "https://www.qq.com/")!!)
-//        req.httpMethod = "GET"
-//        NSURLConnection.sendSynchronousRequest(<#T##request: URLRequest##Foundation.URLRequest#>, returning: <#T##AutoreleasingUnsafeMutablePointer<URLResponse?>?##Swift.AutoreleasingUnsafeMutablePointer<Foundation.URLResponse?>?#>)
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        presenter.onDeactivate()
+    }
+    
+    class ZhihuTableViewDelegate: NSObject, UITableViewDataSource {
+        var data:[Story] = []
+        
+        func numberOfSections(in tableView: UITableView) -> Int {
+            return 1
+        }
+        
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return data.count
+        }
+        
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell") as! StoryTableCell
+            
+            let story = data[indexPath.row]
+            
+            cell.title.text = story.title
+            
+            return cell
+        }
+        
+    }
+    
+    class StoryTableCell: UITableViewCell {
+        @IBOutlet weak var cover: UIImageView!
+        @IBOutlet weak var title: UITextView!
+        
+        
+        override func awakeFromNib() {
+            super.awakeFromNib()
+        }
+        
+        func setData(_ story: Story) {
+        
+        }
     }
 }
 

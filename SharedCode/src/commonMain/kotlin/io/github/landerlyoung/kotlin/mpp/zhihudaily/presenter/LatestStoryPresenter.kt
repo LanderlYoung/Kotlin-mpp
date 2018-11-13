@@ -1,11 +1,11 @@
 package io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter
 
+import io.github.landerlyoung.kotlin.mpp.MyDispatchers
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContentRenderer
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +21,7 @@ import kotlinx.io.IOException
  */
 open class LifeCyclePresenter<T> {
     private val job = Job()
-    val coroutineScope: CoroutineScope = CoroutineScope(job)
+    val coroutineScope: CoroutineScope = CoroutineScope(job + MyDispatchers.Main)
 
     var onLoadingStatusChange: ((Boolean) -> Unit)? = null
 
@@ -63,19 +63,19 @@ class LatestStoryPresenter : LifeCyclePresenter<LatestStories>() {
     override fun onActivate() {
         super.onActivate()
 
-        coroutineScope.launch(Dispatchers.Default) {
+        coroutineScope.launch {
             var latestStories: LatestStories? = null
             loading = true
             try {
                 latestStories = ZhihuDailyRepository.getLatestStories()
             } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
+                withContext(MyDispatchers.Main) {
                     loading = false
                     error = e
                 }
             }
             if (latestStories != null) {
-                withContext(Dispatchers.Main) {
+                withContext(MyDispatchers.Main) {
                     loading = false
                     data = latestStories
                 }
@@ -87,18 +87,18 @@ class LatestStoryPresenter : LifeCyclePresenter<LatestStories>() {
 class StoryContentPresenter(private val storyId: Long) : LifeCyclePresenter<Pair<StoryContent, String>>() {
     override fun onActivate() {
         super.onActivate()
-        coroutineScope.launch(Dispatchers.Default) {
+        coroutineScope.launch {
             var detail: StoryContent? = null
             try {
                 detail = ZhihuDailyRepository.getStoryContent(storyId)
             } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
+                withContext(MyDispatchers.Main) {
                     loading = false
                     error = e
                 }
             }
             if (detail != null) {
-                withContext(Dispatchers.Main) {
+                withContext(MyDispatchers.Main) {
                     loading = false
                     data = detail to StoryContentRenderer.makeHtml(detail)
                 }

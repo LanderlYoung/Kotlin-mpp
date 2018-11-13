@@ -8,7 +8,6 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
-import kotlinx.coroutines.runBlocking
 import kotlinx.io.IOException
 import platform.Foundation.NSError
 import platform.Foundation.NSHTTPURLResponse
@@ -45,8 +44,10 @@ actual suspend fun httpGet(url: String): String {
         val responsePtr = alloc<ObjCObjectVar<NSURLResponse?>>()
         val errorPtr = alloc<ObjCObjectVar<NSError?>>()
 
+        println("NSURLConnection.sendSynchronousRequest url:$url")
         val responseData = NSURLConnection.sendSynchronousRequest(
                 request, responsePtr.ptr, errorPtr.ptr)
+        println("NSURLConnection.sendSynchronousRequest done url:$url")
 
         val response = responsePtr.value
         val error = errorPtr.value
@@ -65,6 +66,3 @@ actual suspend fun httpGet(url: String): String {
     }
 }
 
-fun nonSuspendHttpGet(url: String): String = runBlocking {
-    httpGet(url)
-}

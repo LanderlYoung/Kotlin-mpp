@@ -4,6 +4,7 @@ import android.arch.lifecycle.GenericLifecycleObserver
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.util.concurrent.ConcurrentHashMap
 
@@ -22,7 +23,7 @@ val LifecycleOwner.coroutineScope: CoroutineScope
     get() {
         return _coroutineScopes.getOrPut(this) {
             val job = Job()
-            val cs = CoroutineScope(job)
+            val cs = CoroutineScope(job + Dispatchers.Main)
 
             lifecycle.addObserver(GenericLifecycleObserver { _, event ->
                 if (event == Lifecycle.Event.ON_DESTROY) {
