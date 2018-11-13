@@ -51,17 +51,17 @@ open class LifeCyclePresenter<T> {
             field = value
         }
 
-    open fun onCreate() {
+    open fun onActivate() {
     }
 
-    open fun onDestroy() {
+    open fun onDeactivate() {
         job.cancel()
     }
 }
 
 class LatestStoryPresenter : LifeCyclePresenter<LatestStories>() {
-    override fun onCreate() {
-        super.onCreate()
+    override fun onActivate() {
+        super.onActivate()
 
         coroutineScope.launch(Dispatchers.Default) {
             var latestStories: LatestStories? = null
@@ -85,8 +85,8 @@ class LatestStoryPresenter : LifeCyclePresenter<LatestStories>() {
 }
 
 class StoryContentPresenter(private val storyId: Long) : LifeCyclePresenter<Pair<StoryContent, String>>() {
-    override fun onCreate() {
-        super.onCreate()
+    override fun onActivate() {
+        super.onActivate()
         coroutineScope.launch(Dispatchers.Default) {
             var detail: StoryContent? = null
             try {

@@ -16,15 +16,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.LatestStoryPresenter
 import kotlinx.android.synthetic.main.fragment_item.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.io.IOException
 
 class ZhihuDailyLatestStoriesFragment : Fragment() {
 
@@ -87,33 +82,13 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.onCreate()
-
-        coroutineScope.launch(Dispatchers.IO) {
-            var latestStories: LatestStories? = null
-            loading = true
-            try {
-                latestStories = ZhihuDailyRepository.getLatestStories()
-            } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
-                    loading = false
-                    Snackbar.make(loadingProgress, e.message ?: e.javaClass.simpleName, Snackbar.LENGTH_SHORT)
-                            .show()
-                }
-            }
-            if (latestStories != null) {
-                withContext(Dispatchers.Main) {
-                    loading = false
-                    adapter.setLatestStories(latestStories)
-                }
-            }
-        }
+        presenter.onActivate()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        presenter.onDestroy()
+        presenter.onDeactivate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

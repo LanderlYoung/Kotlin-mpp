@@ -96,12 +96,12 @@ class StoryContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.onCreate()
+        presenter.onActivate()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        presenter.onDestroy()
+        presenter.onDeactivate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
