@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.LatestStoryPresenter
 import kotlinx.android.synthetic.main.fragment_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,9 +41,30 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
             field = value
         }
 
+    private val presenter = LatestStoryPresenter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        presenter.onLoadingStatusChange = {
+            if (it) {
+                loadingProgress.show()
+            } else {
+                loadingProgress.hide()
+            }
+        }
+
+        presenter.onLoadData = {
+            adapter.setLatestStories(it)
+        }
+
+        presenter.onError = { e ->
+            Snackbar.make(loadingProgress,
+                    e.javaClass.simpleName + " " + e.message,
+                    Snackbar.LENGTH_SHORT)
+                    .show()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +86,9 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        presenter.onCreate()
+
         coroutineScope.launch(Dispatchers.IO) {
             var latestStories: LatestStories? = null
             loading = true
@@ -83,6 +108,12 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        presenter.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

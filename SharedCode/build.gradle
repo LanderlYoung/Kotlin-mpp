@@ -22,6 +22,7 @@ kotlin {
         commonMain.dependencies {
             api "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
             api "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
         }
 
         androidMain.dependencies {

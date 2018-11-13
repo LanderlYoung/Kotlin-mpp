@@ -1,12 +1,14 @@
 package io.github.landerlyoung.kotlin.mpp
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog.show
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +21,7 @@ import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihu
 import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.StoryContentPresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,15 +35,7 @@ class StoryContentFragment : Fragment() {
     private lateinit var webView: WebView
     private lateinit var loadingProgress: ContentLoadingProgressBar
 
-    private var loading: Boolean = false
-        set(value) {
-            if (value) {
-                loadingProgress.show()
-            } else {
-                loadingProgress.hide()
-            }
-            field = value
-        }
+    private lateinit var presenter: StoryContentPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +45,35 @@ class StoryContentFragment : Fragment() {
 
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true)
+        }
+
+        presenter = StoryContentPresenter(storyId)
+
+        presenter.onLoadingStatusChange = {
+            if (it) {
+                loadingProgress.show()
+            } else {
+                loadingProgress.hide()
+            }
+        }
+
+        presenter.onLoadData = { (storyContent, html) ->
+            webView.loadDataWithBaseURL(null,
+                    html,
+                    "text/html ",
+                    "UTF-8",
+                    null)
+
+            storyTitle = storyContent.title
+            activity?.invalidateOptionsMenu()
+        }
+
+        presenter.onError = { e ->
+            Snackbar.make(loadingProgress,
+                    e.javaClass.simpleName + " " + e.message,
+                    Snackbar.LENGTH_SHORT)
+                    .show()
+            Log.i("young", "error", e)
         }
     }
 
@@ -67,43 +91,17 @@ class StoryContentFragment : Fragment() {
                     mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
                 }
             }
-            webView.webChromeClient = object : WebChromeClient() {
-                override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                    if (newProgress >= 100) {
-                        loading = false
-                    }
-                }
-            }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loading = true
-        coroutineScope.launch(Dispatchers.Default) {
-            var detail: StoryContent? = null
-            try {
-                detail = ZhihuDailyRepository.getStoryContent(storyId)
-            } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
-                    loading = false
-                    Snackbar.make(loadingProgress, e.message ?: e.javaClass.simpleName, Snackbar.LENGTH_SHORT)
-                            .show()
-                }
-            }
-            if (detail != null) {
-                withContext(Dispatchers.Main) {
-                    webView.loadDataWithBaseURL(null,
-                            StoryContentRenderer.makeHtml(detail),
-                            "text/html ",
-                            "UTF-8",
-                            null)
+        presenter.onCreate()
+    }
 
-                    storyTitle = detail.title
-                    activity?.invalidateOptionsMenu()
-                }
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
