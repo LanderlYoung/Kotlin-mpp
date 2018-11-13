@@ -1,13 +1,17 @@
 package io.github.landerlyoung.kotlin.mpp.zhihudaily
 
 import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ObjCObjectVar
-import kotlinx.cinterop.pointed
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toKString
+import kotlinx.cinterop.value
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.IOException
 import platform.Foundation.NSError
+import platform.Foundation.NSHTTPURLResponse
 import platform.Foundation.NSMutableURLRequest
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLConnection
@@ -15,7 +19,7 @@ import platform.Foundation.NSURLResponse
 import platform.Foundation.sendSynchronousRequest
 import platform.Foundation.setHTTPMethod
 
-@Throws(Throwable::class)
+@Throws(IOException::class)
 actual suspend fun httpGet(url: String): String {
     //  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     //    [request setHTTPMethod:@"GET"];
@@ -37,15 +41,28 @@ actual suspend fun httpGet(url: String): String {
     request.setHTTPMethod("GET")
     request.setURL(NSURL(string = url))
 
-    val response: CPointer<ObjCObjectVar<NSURLResponse?>>? = null
-    val error: CPointer<ObjCObjectVar<NSError?>>? = null
+    memScoped {
+        val responsePtr = alloc<ObjCObjectVar<NSURLResponse?>>()
+        val errorPtr = alloc<ObjCObjectVar<NSError?>>()
 
-    response?.pointed?.reinterpret<NSURLResponse>()
+        val responseData = NSURLConnection.sendSynchronousRequest(
+                request, responsePtr.ptr, errorPtr.ptr)
 
-    val responsData = NSURLConnection.sendSynchronousRequest(
-            request, response, error)
+        val response = responsePtr.value
+        val error = errorPtr.value
+        if (error != null) {
+            throw IOException(error.localizedDescription())
+        }
+        if (response is NSHTTPURLResponse) {
+            if (response.statusCode != 200L) {
+                throw IOException("invalid statusCode ${response.statusCode}")
+            }
 
-    return responsData?.bytes?.reinterpret<ByteVar>()?.toKString() ?: "null"
+            println(response.allHeaderFields())
+        }
+
+        return responseData?.bytes?.reinterpret<ByteVar>()?.toKString() ?: "null"
+    }
 }
 
 fun nonSuspendHttpGet(url: String): String = runBlocking {
