@@ -1,28 +1,18 @@
 package io.github.landerlyoung.kotlin.mpp
 
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.ObjCObjectVar
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.reinterpret
-import kotlinx.cinterop.toKString
-import kotlinx.cinterop.value
+import kotlinx.cinterop.NativePtr
+import kotlinx.cinterop.objcPtr
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlinx.io.IOException
-import platform.Foundation.NSError
-import platform.Foundation.NSHTTPURLResponse
-import platform.Foundation.NSMutableURLRequest
 import platform.Foundation.NSRunLoop
-import platform.Foundation.NSURL
-import platform.Foundation.NSURLConnection
-import platform.Foundation.NSURLResponse
 import platform.Foundation.performBlock
-import platform.Foundation.sendSynchronousRequest
-import platform.Foundation.setHTTPMethod
 import platform.UIKit.UIDevice
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlin.native.concurrent.AtomicReference
+import kotlin.native.concurrent.freeze
 
 actual fun platformName(): String {
     return UIDevice.currentDevice.let {
@@ -53,8 +43,40 @@ actual object MyDispatchers {
         )
 }
 
+interface IosHttpGetAgent {
+    interface Callback {
+        fun onGetResult(result: String?, error: String)
+    }
+
+    fun get(url: String, callback: Callback)
+
+}
+
+private val iosHttpGetAgent = AtomicReference<IosHttpGetAgent?>(null)
+
+fun setIosHttpGetAgent(agent: IosHttpGetAgent) {
+    iosHttpGetAgent.value = agent.freeze()
+}
+
 @Throws(IOException::class)
 actual suspend fun httpGet(url: String): String {
+    return suspendCoroutine { continuation ->
+        val ptr: NativePtr = continuation.objcPtr()
+        ptr.toLong()
+
+
+        iosHttpGetAgent.value!!.get(url, object : IosHttpGetAgent.Callback {
+            override fun onGetResult(result: String?, error: String) {
+                val cont =
+                if (result != null) {
+                    continuation.resume(result)
+                } else {
+                    continuation.resumeWith(Result.failure(IOException(error)))
+                }
+            }
+        })
+    }
+
     //  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     //    [request setHTTPMethod:@"GET"];
     //    [request setURL:[NSURL URLWithString:url]];
@@ -71,6 +93,9 @@ actual suspend fun httpGet(url: String): String {
     //
     //    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
 
+    /*
+    // kotlin/native can't use multi threaded coroutine now.
+    // do it on the swift side...
     val request = NSMutableURLRequest()
     request.setHTTPMethod("GET")
     request.setURL(NSURL(string = url))
@@ -95,5 +120,6 @@ actual suspend fun httpGet(url: String): String {
 
         return responseData?.bytes?.reinterpret<ByteVar>()?.toKString() ?: "null"
     }
+    */
 }
 
