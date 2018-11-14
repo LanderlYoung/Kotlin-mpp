@@ -43,6 +43,7 @@ class ViewController: UIViewController {
         }
         
         presenter.onLoadData = { [unowned self] latestStories in
+            print("onLoadData size:\(latestStories.stories.count)")
             self.dataSource.data.removeAll()
             self.dataSource.data.append(contentsOf: latestStories.stories)
             self.tableView.reloadData()
@@ -75,17 +76,4 @@ class ViewController: UIViewController {
             return cell
         }
     }
-    
-    class StoryTableCell: UITableViewCell {
-        //@IBOutlet weak var storyTitle: UITextView!
-        
-        override func awakeFromNib() {
-            super.awakeFromNib()
-        }
-        
-        func setData(_ story: Story) {
-            //storyTitle.text = story.title
-        }
-    }
 }
-
