@@ -3,31 +3,14 @@ package io.github.landerlyoung.kotlin.mpp
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import platform.Foundation.NSRunLoop
 import platform.Foundation.performBlock
 import platform.UIKit.UIDevice
 import kotlin.coroutines.CoroutineContext
-import kotlin.native.concurrent.TransferMode
 
 actual fun platformName(): String {
     return UIDevice.currentDevice.let {
         it.systemName() + " " + it.systemVersion
-    }
-}
-
-fun testCoroutine() {
-    runBlocking {
-        launch(MyDispatchers.Main) {
-            println("Hello")
-            withContext(MyDispatchers.Worker) {
-                delay(10L)
-                println("World!")
-            }
-        }
     }
 }
 
@@ -40,17 +23,16 @@ actual object MyDispatchers {
         }
     }
 
-    actual val Worker: CoroutineDispatcher = object : CoroutineDispatcher() {
-        val worker = kotlin.native.concurrent.Worker.start()
-
-        override fun dispatch(context: CoroutineContext, block: Runnable) {
-            println("dispatch block $block")
-            // https://github.com/shakurocom/kotlin_multiplatform/blob/master/platform-ios/src/main/kotlin/com/multiplatform/coroutines/AsyncDispatcher.kt
-            // https://github.com/JetBrains/kotlin-native/blob/master/samples/workers/src/workersMain/kotlin/Workers.kt
-            this.worker.execute(TransferMode.SAFE, { block }) {
-                println("run dispatched block $it")
-                it.run()
-            }
-        }
-    }
+    actual val Worker: CoroutineDispatcher
+        get() = throw IllegalArgumentException("""\
+                |Kotlin/Native doesn't support multi threaded coroutines now(2018/11/14)
+                |and the Dispatchers.Main can't work on ios as well
+                |
+                |https://github.com/ktorio/ktor/issues/678
+                |
+                |The following issues are try to fix Dispatchers.Main issue:
+                |https://github.com/Kotlin/kotlinx.coroutines/issues/470
+                |https://github.com/Kotlin/kotlinx.coroutines/issues/770
+            """.trimMargin()
+        )
 }

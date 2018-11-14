@@ -19,10 +19,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        ActualKt.testCoroutine()
-        
-        
+                
         tableView.dataSource = dataSource
         
         presenter.onLoadingStatusChange = { [unowned self] loading in
@@ -52,7 +49,7 @@ class ViewController: UIViewController {
             return KotlinUnit()
         }
         
-        presenter.onActivate()
+       presenter.onActivate()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -71,27 +68,23 @@ class ViewController: UIViewController {
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "storyCell") as! StoryTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewStoryCellReuseIdentifier") as! StoryTableCell
             
             let story = data[indexPath.row]
-            
-            cell.title.text = story.title
-            
+            cell.setData(story)
             return cell
         }
     }
     
     class StoryTableCell: UITableViewCell {
-        @IBOutlet weak var cover: UIImageView!
-        @IBOutlet weak var title: UITextView!
-        
+        //@IBOutlet weak var storyTitle: UITextView!
         
         override func awakeFromNib() {
             super.awakeFromNib()
         }
         
         func setData(_ story: Story) {
-            title.text = story.title
+            //storyTitle.text = story.title
         }
     }
 }

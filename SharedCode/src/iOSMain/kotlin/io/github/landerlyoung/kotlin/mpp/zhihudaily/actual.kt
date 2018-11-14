@@ -44,10 +44,8 @@ actual suspend fun httpGet(url: String): String {
         val responsePtr = alloc<ObjCObjectVar<NSURLResponse?>>()
         val errorPtr = alloc<ObjCObjectVar<NSError?>>()
 
-        println("NSURLConnection.sendSynchronousRequest url:$url")
         val responseData = NSURLConnection.sendSynchronousRequest(
                 request, responsePtr.ptr, errorPtr.ptr)
-        println("NSURLConnection.sendSynchronousRequest done url:$url")
 
         val response = responsePtr.value
         val error = errorPtr.value
@@ -58,8 +56,6 @@ actual suspend fun httpGet(url: String): String {
             if (response.statusCode != 200L) {
                 throw IOException("invalid statusCode ${response.statusCode}")
             }
-
-            println(response.allHeaderFields())
         }
 
         return responseData?.bytes?.reinterpret<ByteVar>()?.toKString() ?: "null"
