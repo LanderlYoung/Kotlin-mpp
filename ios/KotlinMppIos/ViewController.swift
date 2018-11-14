@@ -21,6 +21,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
                 
         tableView.dataSource = dataSource
+        tableView.delegate = self
         
         presenter.onLoadingStatusChange = { [unowned self] loading in
             if (loading.boolValue) {
@@ -75,5 +76,11 @@ class ViewController: UIViewController {
             cell.setData(story)
             return cell
         }
+    }
+}
+
+extension ViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("select row \(indexPath.row)")
     }
 }
