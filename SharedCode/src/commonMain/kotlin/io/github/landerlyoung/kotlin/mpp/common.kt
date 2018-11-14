@@ -12,3 +12,6 @@ expect object MyDispatchers {
 fun createApplicationScreenMessage() : String {
     return "Kotlin Rocks on ${platformName()}"
 }
+
+// http request
+expect suspend fun httpGet(url: String): String

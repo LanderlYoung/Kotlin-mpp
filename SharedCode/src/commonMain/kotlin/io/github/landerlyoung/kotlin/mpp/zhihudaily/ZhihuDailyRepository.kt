@@ -1,8 +1,6 @@
-package io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily
+package io.github.landerlyoung.kotlin.mpp.zhihudaily
 
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.httpGet
+import io.github.landerlyoung.kotlin.mpp.httpGet
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JSON
 

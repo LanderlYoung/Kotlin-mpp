@@ -1,7 +1,6 @@
 package io.github.landerlyoung.kotlin.mpp
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog.show
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -14,18 +13,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+import android.webkit.WebSettings
 import android.webkit.WebView
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContentRenderer
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.StoryContentPresenter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.io.IOException
 
 class StoryContentFragment : Fragment() {
 
@@ -88,7 +79,7 @@ class StoryContentFragment : Fragment() {
                 allowFileAccess = false
                 allowContentAccess = false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
+                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 }
             }
         }

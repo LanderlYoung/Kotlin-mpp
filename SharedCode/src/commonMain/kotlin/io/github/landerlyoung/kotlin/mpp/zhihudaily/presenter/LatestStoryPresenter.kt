@@ -1,10 +1,10 @@
 package io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter
 
 import io.github.landerlyoung.kotlin.mpp.MyDispatchers
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContentRenderer
-import io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContentRenderer
+import io.github.landerlyoung.kotlin.mpp.zhihudaily.ZhihuDailyRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

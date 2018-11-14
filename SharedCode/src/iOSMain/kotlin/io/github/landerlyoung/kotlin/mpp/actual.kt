@@ -1,4 +1,4 @@
-package io.github.landerlyoung.kotlin.mpp.zhihudaily
+package io.github.landerlyoung.kotlin.mpp
 
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.ObjCObjectVar
@@ -8,15 +8,50 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Runnable
 import kotlinx.io.IOException
 import platform.Foundation.NSError
 import platform.Foundation.NSHTTPURLResponse
 import platform.Foundation.NSMutableURLRequest
+import platform.Foundation.NSRunLoop
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLConnection
 import platform.Foundation.NSURLResponse
+import platform.Foundation.performBlock
 import platform.Foundation.sendSynchronousRequest
 import platform.Foundation.setHTTPMethod
+import platform.UIKit.UIDevice
+import kotlin.coroutines.CoroutineContext
+
+actual fun platformName(): String {
+    return UIDevice.currentDevice.let {
+        it.systemName() + " " + it.systemVersion
+    }
+}
+
+actual object MyDispatchers {
+    actual val Main: CoroutineDispatcher = object : CoroutineDispatcher() {
+        override fun dispatch(context: CoroutineContext, block: Runnable) {
+            NSRunLoop.mainRunLoop().performBlock {
+                block.run()
+            }
+        }
+    }
+
+    actual val Worker: CoroutineDispatcher
+        get() = throw IllegalArgumentException("""\
+                |Kotlin/Native doesn't support multi threaded coroutines now(2018/11/14)
+                |and the Dispatchers.Main can't work on ios as well
+                |
+                |https://github.com/ktorio/ktor/issues/678
+                |
+                |The following issues are try to fix Dispatchers.Main issue:
+                |https://github.com/Kotlin/kotlinx.coroutines/issues/470
+                |https://github.com/Kotlin/kotlinx.coroutines/issues/770
+            """.trimMargin()
+        )
+}
 
 @Throws(IOException::class)
 actual suspend fun httpGet(url: String): String {
