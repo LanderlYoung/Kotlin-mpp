@@ -20,8 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ActualKt.testCoroutine()
-        
+//        ActualKt.testCoroutine()
         
         tableView.dataSource = dataSource
         

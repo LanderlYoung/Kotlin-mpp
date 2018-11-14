@@ -1,4 +1,4 @@
-package io.github.landerlyoung.kotlin.mpp.zhihudaily
+package io.github.landerlyoung.kotlin.mpp
 
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.ObjCObjectVar
@@ -17,6 +17,13 @@ import platform.Foundation.NSURLConnection
 import platform.Foundation.NSURLResponse
 import platform.Foundation.sendSynchronousRequest
 import platform.Foundation.setHTTPMethod
+import platform.UIKit.UIDevice
+
+actual fun platformName(): String {
+    return UIDevice.currentDevice.let {
+        it.systemName() + " " + it.systemVersion
+    }
+}
 
 @Throws(IOException::class)
 actual suspend fun httpGet(url: String): String {

@@ -1,44 +1,32 @@
 package io.github.landerlyoung.kotlin.mpp
 
-
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import platform.Foundation.NSDate
 import platform.Foundation.NSRunLoop
-import platform.Foundation.performBlock
-import platform.UIKit.UIDevice
+import platform.Foundation.addTimeInterval
+import platform.Foundation.runUntilDate
 import kotlin.coroutines.CoroutineContext
 import kotlin.native.concurrent.TransferMode
 
-actual fun platformName(): String {
-    return UIDevice.currentDevice.let {
-        it.systemName() + " " + it.systemVersion
-    }
-}
-
-fun testCoroutine() {
-    runBlocking {
-        launch(MyDispatchers.Main) {
-            println("Hello")
-            withContext(MyDispatchers.Worker) {
-                delay(10L)
-                println("World!")
-            }
-        }
-    }
-}
-
+/**
+ * <pre>
+ * Author: landerlyoung@gmail.com
+ * Date:   2018-11-14
+ * Time:   15:46
+ * Life with Passion, Code with Creativity.
+ * </pre>
+ */
 actual object MyDispatchers {
-    actual val Main: CoroutineDispatcher = object : CoroutineDispatcher() {
+    actual val Main: CoroutineDispatcher = /*object : CoroutineDispatcher() {
         override fun dispatch(context: CoroutineContext, block: Runnable) {
             NSRunLoop.mainRunLoop().performBlock {
                 block.run()
             }
         }
-    }
+    }*/ Dispatchers.Main
 
     actual val Worker: CoroutineDispatcher = object : CoroutineDispatcher() {
         val worker = kotlin.native.concurrent.Worker.start()
@@ -53,4 +41,34 @@ actual object MyDispatchers {
             }
         }
     }
+}
+
+fun runBlocking(block: () -> Int): Int {
+    return runBlocking(MyDispatchers.Main) {
+        block()
+    }
+}
+
+
+class Expectation<T> {
+    private var waiting = true
+    private var result: T? = null
+
+    fun fulfill(result: T?) {
+        waiting = false
+        this.result = result
+    }
+
+    fun wait(): T? {
+        while (waiting) {
+            advanceRunLoop()
+        }
+
+        return result
+    }
+}
+
+private fun advanceRunLoop() {
+    val date = NSDate().addTimeInterval(1.0) as NSDate
+    NSRunLoop.mainRunLoop.runUntilDate(date)
 }

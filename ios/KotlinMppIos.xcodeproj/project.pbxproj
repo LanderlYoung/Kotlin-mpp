@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F355F85219C07B7006F8D86 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F355F84219C07B7006F8D86 /* main.m */; };
 		6F5AC6D6219439BA00122875 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5AC6D5219439BA00122875 /* AppDelegate.swift */; };
 		6F5AC6D8219439BA00122875 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5AC6D7219439BA00122875 /* ViewController.swift */; };
 		6F5AC6DB219439BA00122875 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F5AC6D9219439BA00122875 /* Main.storyboard */; };
@@ -42,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6F355F83219C07B7006F8D86 /* KotlinMppIos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KotlinMppIos-Bridging-Header.h"; sourceTree = "<group>"; };
+		6F355F84219C07B7006F8D86 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6F5AC6D2219439BA00122875 /* KotlinMppIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KotlinMppIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F5AC6D5219439BA00122875 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F5AC6D7219439BA00122875 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 				6F5AC6DC219439BC00122875 /* Assets.xcassets */,
 				6F5AC6DE219439BC00122875 /* LaunchScreen.storyboard */,
 				6F5AC6E1219439BC00122875 /* Info.plist */,
+				6F355F84219C07B7006F8D86 /* main.m */,
+				6F355F83219C07B7006F8D86 /* KotlinMppIos-Bridging-Header.h */,
 			);
 			path = KotlinMppIos;
 			sourceTree = "<group>";
@@ -167,6 +172,7 @@
 				TargetAttributes = {
 					6F5AC6D1219439BA00122875 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1010;
 					};
 					6F5AC6E5219439BC00122875 = {
 						CreatedOnToolsVersion = 10.0;
@@ -240,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F5AC6D8219439BA00122875 /* ViewController.swift in Sources */,
+				6F355F85219C07B7006F8D86 /* main.m in Sources */,
 				6F5AC6D6219439BA00122875 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +409,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../SharedCode/build/xcode-frameworks";
@@ -412,6 +420,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.landerlyoung.KotlinMppIos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KotlinMppIos/KotlinMppIos-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -421,6 +431,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../SharedCode/build/xcode-frameworks";
@@ -431,6 +442,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.landerlyoung.KotlinMppIos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KotlinMppIos/KotlinMppIos-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

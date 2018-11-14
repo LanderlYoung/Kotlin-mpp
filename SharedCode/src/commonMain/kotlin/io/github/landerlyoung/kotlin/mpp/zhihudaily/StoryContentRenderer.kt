@@ -1,6 +1,4 @@
-package io.github.landerlyoung.kotlin.mpp.io.github.landerlyoung.kotlin.mpp.zhihudaily
-
-import io.github.landerlyoung.kotlin.mpp.zhihudaily.StoryContent
+package io.github.landerlyoung.kotlin.mpp.zhihudaily
 
 /**
  * <pre>

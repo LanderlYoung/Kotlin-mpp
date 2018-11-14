@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 expect fun platformName(): String
 
+expect suspend fun httpGet(url: String): String
+
 expect object MyDispatchers {
     val Main: CoroutineDispatcher
     val Worker: CoroutineDispatcher
