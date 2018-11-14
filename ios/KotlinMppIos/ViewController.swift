@@ -19,6 +19,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ActualKt.testCoroutine()
+        
+        
         tableView.dataSource = dataSource
         
         presenter.onLoadingStatusChange = { [unowned self] loading in
@@ -75,7 +79,6 @@ class ViewController: UIViewController {
             
             return cell
         }
-        
     }
     
     class StoryTableCell: UITableViewCell {
@@ -88,7 +91,7 @@ class ViewController: UIViewController {
         }
         
         func setData(_ story: Story) {
-        
+            title.text = story.title
         }
     }
 }
