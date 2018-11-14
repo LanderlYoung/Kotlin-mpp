@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SharedCode
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        ActualKt.setIosHttpGetAgent(agent: SwiftIosHttpGetAgent())
         return true
     }
 
@@ -40,7 +43,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
 
+class SwiftIosHttpGetAgent: NSObject, IosHttpGetAgent {
+    func get(url: String, callback: IosHttpGetAgentCallback) {
+        DispatchQueue.global().async {
+            let task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
+                if let resultData = data {
+                    DispatchQueue.main.async {
+                        callback.onGetResult(
+                                result: String(data: resultData, encoding: .utf8)!,
+                                error: "success")
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        callback.onGetResult(
+                                result: nil,
+                                error: error?.localizedDescription ?? "unknown error")
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+}
