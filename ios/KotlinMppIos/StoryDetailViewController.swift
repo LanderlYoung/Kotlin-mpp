@@ -30,7 +30,7 @@ class StoryDetailViewController: UIViewController {
         presenter = StoryContentPresenter(storyId: detailStory.id)
 
         presenter.onLoadingStatusChange = { [unowned self] loading in
-            print("StoryDetailViewController.onLoadingStatusChange:\(loading)")
+            print("StoryDetailViewController.onLoadingStatusChange:\(loading.boolValue)")
             return KotlinUnit()
         }
         presenter.onError = { [unowned self] error in
@@ -54,14 +54,7 @@ class StoryDetailViewController: UIViewController {
         let storyContent = data.first as! StoryContent
         let html = data.second as! String
 
-        print("")
-
-        print(html)
-
-        print("")
-
         navigationTitle.title = storyContent.title
         webview.loadHTMLString(html, baseURL: nil)
-//        webview.load(URLRequest(url: URL(string: "http://daily.zhihu.com/story/9701605")!))
     }
 }

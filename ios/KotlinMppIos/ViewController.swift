@@ -9,7 +9,7 @@
 import UIKit
 import SharedCode
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -21,14 +21,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         tableView.dataSource = dataSource
-        // tableView.delegate = self
+        tableView.delegate = self
 
         presenter.onLoadingStatusChange = { [unowned self] loading in
-            if (loading.boolValue) {
-
-            } else {
-
-            }
             print("loading \(loading.boolValue)")
             return KotlinUnit()
         }
@@ -54,6 +49,10 @@ class ViewController: UIViewController {
         presenter.onActivate()
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        presenter.onDeactivate()
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         if (segue.identifier == "showStoryDetail") {
@@ -63,28 +62,41 @@ class ViewController: UIViewController {
             detailVC.detailStory = cell.story
         }
     }
+}
 
-    override func viewDidDisappear(_ animated: Bool) {
-        presenter.onDeactivate()
+class ZhihuTableViewDelegate: NSObject, UITableViewDataSource {
+    var data: [Story] = []
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewStoryCellReuseIdentifier") as! StoryTableCell
+        
+        let story = data[indexPath.row]
+        cell.setData(story)
+        return cell
+    }
+}
 
-    class ZhihuTableViewDelegate: NSObject, UITableViewDataSource {
-        var data: [Story] = []
-
-        func numberOfSections(in tableView: UITableView) -> Int {
-            return 1
-        }
-
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return data.count
-        }
-
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewStoryCellReuseIdentifier") as! StoryTableCell
-
-            let story = data[indexPath.row]
-            cell.setData(story)
-            return cell
-        }
+class StoryTableCell: UITableViewCell {
+    
+    @IBOutlet weak var cover: UIImageView!
+    @IBOutlet weak var title: UITextView!
+    
+    var story: Story? = nil
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    func setData(_ story: Story) {
+        self.story = story
+        title.text = story.title
     }
 }

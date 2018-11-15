@@ -89,6 +89,7 @@ class StoryContentPresenter(private val storyId: Long) : LifeCyclePresenter<Pair
         super.onActivate()
         coroutineScope.launch {
             var detail: StoryContent? = null
+            loading = true
             try {
                 detail = ZhihuDailyRepository.getStoryContent(storyId)
             } catch (e: IOException) {

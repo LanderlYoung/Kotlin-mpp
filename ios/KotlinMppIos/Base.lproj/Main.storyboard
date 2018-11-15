@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gRf-I5-oVE">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gRf-I5-oVE">
                                 <rect key="frame" x="20" y="29" width="381" height="847"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -29,18 +29,35 @@
                                             <rect key="frame" x="0.0" y="0.0" width="381" height="101.66666666666667"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="StoryContent" translatesAutoresizingMaskIntoConstraints="NO" id="QhN-VK-3XW">
-                                                    <rect key="frame" x="114" y="11" width="240" height="80"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QhN-VK-3XW">
+                                                    <rect key="frame" x="108" y="11" width="253" height="80"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="80" id="HrR-WE-rTg"/>
+                                                    </constraints>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="StoryContent">
+                                                            <attributes>
+                                                                <font key="NSFont" size="18" name=".SFNSText"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="drW-ZJ-G6Z">
-                                                    <rect key="frame" x="20" y="11" width="86" height="80"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="drW-ZJ-G6Z">
+                                                    <rect key="frame" x="20" y="11" width="80" height="80"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="80" id="2LU-xp-85r"/>
+                                                        <constraint firstAttribute="width" constant="80" id="fBY-6d-Zgn"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="drW-ZJ-G6Z" firstAttribute="leading" secondItem="H14-G4-uij" secondAttribute="leading" constant="20" id="JD7-p2-sUv"/>
+                                                <constraint firstItem="QhN-VK-3XW" firstAttribute="leading" secondItem="drW-ZJ-G6Z" secondAttribute="trailing" constant="8" id="Lql-Mx-SAH"/>
+                                                <constraint firstAttribute="trailing" secondItem="QhN-VK-3XW" secondAttribute="trailing" constant="20" id="UUi-Va-Vd8"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="cover" destination="drW-ZJ-G6Z" id="Oiq-yd-Qu7"/>
