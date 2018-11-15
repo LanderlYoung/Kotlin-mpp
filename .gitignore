@@ -28,8 +28,13 @@ classes
 .DS_Store
 
 #xcode
+ios/KotlinMppIos.xcworkspace
 ios/KotlinMppIos.xcodeproj/project.xcworkspace/xcuserdata/
 ios/KotlinMppIos.xcodeproj/xcuserdata/
+
+#cocoapods
+Pods
+Podfile.lock
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

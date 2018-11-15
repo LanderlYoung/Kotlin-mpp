@@ -8,6 +8,7 @@
 
 import UIKit
 import SharedCode
+//import SDWebImage
 
 class ViewController: UIViewController, UITableViewDelegate {
 
@@ -98,5 +99,7 @@ class StoryTableCell: UITableViewCell {
     func setData(_ story: Story) {
         self.story = story
         title.text = story.title
+        // imageView.sd_setImage(with: URL(string: "http://www.domain.com/path/to/image.jpg"), placeholderImage: UIImage(named: "placeholder.png"))
+       // cover.sd_setImage(with: URL(string: story.image), placeholderImage: nil)
     }
 }
