@@ -1,7 +1,5 @@
 package io.github.landerlyoung.kotlin.mpp
 
-import kotlinx.cinterop.NativePtr
-import kotlinx.cinterop.objcPtr
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlinx.io.IOException
@@ -45,11 +43,10 @@ actual object MyDispatchers {
 
 interface IosHttpGetAgent {
     interface Callback {
-        fun onGetResult(result: String?, error: String)
+        fun onGetResult(url: String, result: String?, error: String)
     }
 
-    fun get(url: String, callback: Callback)
-
+    fun httpGet(url: String)
 }
 
 private val iosHttpGetAgent = AtomicReference<IosHttpGetAgent?>(null)
@@ -58,23 +55,26 @@ fun setIosHttpGetAgent(agent: IosHttpGetAgent) {
     iosHttpGetAgent.value = agent.freeze()
 }
 
+private val requestingHashMap = hashMapOf<String, IosHttpGetAgent.Callback>()
+
+fun notifyHttpGetResponse(url: String, result: String?, error: String) {
+    requestingHashMap.remove(url)?.onGetResult(url, result, error)
+}
+
 @Throws(IOException::class)
 actual suspend fun httpGet(url: String): String {
     return suspendCoroutine { continuation ->
-        val ptr: NativePtr = continuation.objcPtr()
-        ptr.toLong()
-
-
-        iosHttpGetAgent.value!!.get(url, object : IosHttpGetAgent.Callback {
-            override fun onGetResult(result: String?, error: String) {
-                val cont =
+        val cb = object : IosHttpGetAgent.Callback {
+            override fun onGetResult(url: String, result: String?, error: String) {
                 if (result != null) {
                     continuation.resume(result)
                 } else {
                     continuation.resumeWith(Result.failure(IOException(error)))
                 }
             }
-        })
+        }
+        requestingHashMap[url] = cb
+        iosHttpGetAgent.value!!.httpGet(url)
     }
 
     //  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
