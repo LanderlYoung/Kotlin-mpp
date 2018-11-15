@@ -28,9 +28,9 @@ classes
 .DS_Store
 
 #xcode
-ios/KotlinMppIos.xcworkspace
 ios/KotlinMppIos.xcodeproj/project.xcworkspace/xcuserdata/
 ios/KotlinMppIos.xcodeproj/xcuserdata/
+ios/KotlinMppIos.xcworkspace/xcuserdata
 
 #cocoapods
 Pods

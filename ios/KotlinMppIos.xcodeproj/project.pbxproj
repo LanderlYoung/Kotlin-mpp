@@ -467,7 +467,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../SharedCode/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../SharedCode/build/xcode-frameworks",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage\"",
+				);
 				INFOPLIST_FILE = KotlinMppIos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -487,7 +491,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../SharedCode/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../SharedCode/build/xcode-frameworks",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage\"",
+				);
 				INFOPLIST_FILE = KotlinMppIos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
