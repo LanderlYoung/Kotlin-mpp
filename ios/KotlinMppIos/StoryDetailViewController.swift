@@ -9,16 +9,22 @@
 import UIKit
 import WebKit
 import os.log
+import SharedCode
 
 
 class StoryDetailViewController: UIViewController {
 
     @IBOutlet weak var webview: WKWebView!
+
+    @IBOutlet weak var navigationTitle: UINavigationItem!
+    
+    var detailStory :Story? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        navigationTitle.title = detailStory?.title
     }
     
     @IBAction func back(_ sender: Any) {

@@ -14,12 +14,15 @@ class StoryTableCell: UITableViewCell {
     
     @IBOutlet weak var cover: UIImageView!
     @IBOutlet weak var title: UITextView!
+
+    var story: Story? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
     }
     
     func setData(_ story: Story) {
+        self.story = story
         title.text = story.title
     }
     
