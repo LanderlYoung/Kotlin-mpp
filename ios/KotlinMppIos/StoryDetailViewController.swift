@@ -25,8 +25,6 @@ class StoryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        webview.uiDelegate
-
         // Do any additional setup after loading the view.
         navigationTitle.title = detailStory.title
         presenter = StoryContentPresenter(storyId: detailStory.id)
@@ -56,7 +54,14 @@ class StoryDetailViewController: UIViewController {
         let storyContent = data.first as! StoryContent
         let html = data.second as! String
 
+        print("")
+
+        print(html)
+
+        print("")
+
         navigationTitle.title = storyContent.title
         webview.loadHTMLString(html, baseURL: nil)
+//        webview.load(URLRequest(url: URL(string: "http://daily.zhihu.com/story/9701605")!))
     }
 }
