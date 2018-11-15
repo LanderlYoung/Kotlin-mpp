@@ -82,5 +82,8 @@ class ViewController: UIViewController {
 extension ViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("select row \(indexPath.row)")
+        
+        let story = self.dataSource.data[indexPath.row]
+        present(StoryDetailViewController(), animated: true, completion: nil)
     }
 }
