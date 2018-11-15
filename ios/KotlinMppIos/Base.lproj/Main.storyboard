@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="105" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gRf-I5-oVE">
-                                <rect key="frame" x="0.0" y="88" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="storyCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tableViewStoryCellReuseIdentifier" rowHeight="105" id="lwi-2x-fge" customClass="StoryTableCell" customModule="KotlinMppIos" customModuleProvider="target">
@@ -78,10 +78,10 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="gRf-I5-oVE" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="FN6-bF-cs1"/>
+                            <constraint firstItem="gRf-I5-oVE" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" id="FN6-bF-cs1"/>
                             <constraint firstItem="gRf-I5-oVE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="UMk-LT-DE7"/>
-                            <constraint firstItem="gRf-I5-oVE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="XI8-Ho-64a"/>
-                            <constraint firstItem="gRf-I5-oVE" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="cAP-OK-aq0"/>
+                            <constraint firstItem="gRf-I5-oVE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XI8-Ho-64a"/>
+                            <constraint firstItem="gRf-I5-oVE" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" id="cAP-OK-aq0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
