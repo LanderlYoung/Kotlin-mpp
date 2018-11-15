@@ -3,4 +3,5 @@ use_frameworks!
 
 target 'KotlinMppIos' do
       pod 'SDWebImage', '~> 4.1.0'
+      pod 'MBProgressHUD', '~> 1.1.0'
 end

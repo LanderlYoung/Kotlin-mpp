@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import os.log
 import SharedCode
-
+import MBProgressHUD
 
 class StoryDetailViewController: UIViewController {
 
@@ -31,9 +31,19 @@ class StoryDetailViewController: UIViewController {
 
         presenter.onLoadingStatusChange = { [unowned self] loading in
             print("StoryDetailViewController.onLoadingStatusChange:\(loading.boolValue)")
+            if (loading.boolValue) {
+                MBProgressHUD.showAdded(to: self.webview, animated: true)
+            } else {
+                MBProgressHUD.hide(for: self.webview, animated: true)
+            }
             return KotlinUnit()
         }
         presenter.onError = { [unowned self] error in
+            let alertController = UIAlertController(title: "Error", message: error.message, preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+            alertController.addAction(alertAction)
+            self.present(alertController, animated: true, completion: nil)
+
             return KotlinUnit()
         }
 

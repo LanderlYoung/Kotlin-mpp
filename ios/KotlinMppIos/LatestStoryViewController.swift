@@ -9,6 +9,7 @@
 import UIKit
 import SharedCode
 import SDWebImage
+import MBProgressHUD
 
 class LatestStoryViewController: UIViewController, UITableViewDelegate {
 
@@ -26,6 +27,11 @@ class LatestStoryViewController: UIViewController, UITableViewDelegate {
 
         presenter.onLoadingStatusChange = { [unowned self] loading in
             print("loading \(loading.boolValue)")
+            if (loading.boolValue) {
+                MBProgressHUD.showAdded(to: self.tableView, animated: true)
+            } else {
+                MBProgressHUD.hide(for: self.tableView, animated: true)
+            }
             return KotlinUnit()
         }
 
