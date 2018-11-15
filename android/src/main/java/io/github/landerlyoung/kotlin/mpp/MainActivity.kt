@@ -12,11 +12,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<TextView>(R.id.text).let {
-            it.text = createApplicationScreenMessage()
-            Snackbar.make(it, createApplicationScreenMessage(), Snackbar.LENGTH_SHORT)
-                    .show()
-        }
+        Snackbar.make(
+                findViewById<TextView>(R.id.activity_content),
+                createApplicationScreenMessage(),
+                Snackbar.LENGTH_SHORT)
+                .show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
