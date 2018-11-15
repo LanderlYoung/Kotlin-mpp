@@ -10,10 +10,10 @@ import UIKit
 import SharedCode
 import SDWebImage
 
-class ViewController: UIViewController, UITableViewDelegate {
+class LatestStoryViewController: UIViewController, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-
+    
     private let presenter = LatestStoryPresenter()
 
     private let dataSource = ZhihuTableViewDelegate()
@@ -99,7 +99,6 @@ class StoryTableCell: UITableViewCell {
     func setData(_ story: Story) {
         self.story = story
         title.text = story.title
-        // imageView.sd_setImage(with: URL(string: "http://www.domain.com/path/to/image.jpg"), placeholderImage: UIImage(named: "placeholder.png"))
         if let img = story.image {
             cover.sd_setImage(with: URL(string: img), placeholderImage: nil)
         } else {
