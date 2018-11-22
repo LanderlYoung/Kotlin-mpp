@@ -16,8 +16,10 @@ object ZhihuDailyRepository {
     private val json = JSON(strictMode = false)
 
     @Suppress("NOTHING_TO_INLINE")
-    private inline fun <T> String.toJson(serializer: DeserializationStrategy<T>): T =
-            json.parse(serializer, this)
+    private inline fun <T> String.toJson(serializer: DeserializationStrategy<T>): T {
+        println("toJson $this")
+        return json.parse(serializer, this)
+    }
 
     suspend fun getLatestStories(): LatestStories {
         println("getLatestStories")

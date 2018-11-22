@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        ActualKt.setIosHttpGetAgent(agent: SwiftIosHttpGetAgent())
+        // ActualKt.setIosHttpGetAgent(agent: SwiftIosHttpGetAgent())
         return true
     }
     
@@ -45,28 +45,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-class SwiftIosHttpGetAgent: NSObject, IosHttpGetAgent {
-    
-    func httpGet(url: String) {
-        
-        let task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
-            if let resultData = data {
-                DispatchQueue.main.async {
-                    ActualKt.notifyHttpGetResponse(
-                        url:url,
-                        result: String(data: resultData, encoding: .utf8)!,
-                        error: "success")
-                }
-            } else {
-                DispatchQueue.main.async {
-                    ActualKt.notifyHttpGetResponse(
-                        url:url,
-                        result: nil,
-                        error: "success")
-                }
-            }
-        }
-        task.resume()
-        
-    }
-}
+//class SwiftIosHttpGetAgent: NSObject, IosHttpGetAgent {
+//
+//    func httpGet(url: String) {
+//
+//        let task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
+//            if let resultData = data {
+//                DispatchQueue.main.async {
+//                    ActualKt.notifyHttpGetResponse(
+//                        url:url,
+//                        result: String(data: resultData, encoding: .utf8)!,
+//                        error: "success")
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+//                    ActualKt.notifyHttpGetResponse(
+//                        url:url,
+//                        result: nil,
+//                        error: "success")
+//                }
+//            }
+//        }
+//        task.resume()
+//
+//    }
+//}

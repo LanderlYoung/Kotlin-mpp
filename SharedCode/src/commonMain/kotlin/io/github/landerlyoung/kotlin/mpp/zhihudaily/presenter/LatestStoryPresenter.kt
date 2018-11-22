@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.io.IOException
 
 /**
  * <pre>
@@ -64,20 +63,17 @@ class LatestStoryPresenter : LifeCyclePresenter<LatestStories>() {
         super.onActivate()
 
         coroutineScope.launch {
-            var latestStories: LatestStories? = null
             loading = true
             try {
-                latestStories = ZhihuDailyRepository.getLatestStories()
-            } catch (e: IOException) {
-                withContext(MyDispatchers.Main) {
-                    loading = false
-                    error = e
-                }
-            }
-            if (latestStories != null) {
+                val latestStories = ZhihuDailyRepository.getLatestStories()
                 withContext(MyDispatchers.Main) {
                     loading = false
                     data = latestStories
+                }
+            } catch (e: Exception) {
+                withContext(MyDispatchers.Main) {
+                    loading = false
+                    error = e
                 }
             }
         }
@@ -88,20 +84,17 @@ class StoryContentPresenter(private val storyId: Long) : LifeCyclePresenter<Pair
     override fun onActivate() {
         super.onActivate()
         coroutineScope.launch {
-            var detail: StoryContent? = null
             loading = true
             try {
-                detail = ZhihuDailyRepository.getStoryContent(storyId)
-            } catch (e: IOException) {
-                withContext(MyDispatchers.Main) {
-                    loading = false
-                    error = e
-                }
-            }
-            if (detail != null) {
+                val detail = ZhihuDailyRepository.getStoryContent(storyId)
                 withContext(MyDispatchers.Main) {
                     loading = false
                     data = detail to StoryContentRenderer.makeHtml(detail)
+                }
+            } catch (e: Exception) {
+                withContext(MyDispatchers.Main) {
+                    loading = false
+                    error = e
                 }
             }
         }

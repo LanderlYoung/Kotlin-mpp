@@ -1,16 +1,31 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package io.github.landerlyoung.kotlin.mpp
 
+import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.readBytes
+import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlinx.io.IOException
+import platform.Foundation.NSData
+import platform.Foundation.NSError
+import platform.Foundation.NSHTTPURLResponse
+import platform.Foundation.NSMutableURLRequest
 import platform.Foundation.NSRunLoop
+import platform.Foundation.NSURL
+import platform.Foundation.NSURLConnection
+import platform.Foundation.NSURLResponse
 import platform.Foundation.performBlock
+import platform.Foundation.sendSynchronousRequest
+import platform.Foundation.setHTTPMethod
 import platform.UIKit.UIDevice
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.native.concurrent.AtomicReference
-import kotlin.native.concurrent.freeze
 
 actual fun platformName(): String {
     return UIDevice.currentDevice.let {
@@ -41,61 +56,7 @@ actual object MyDispatchers {
         )
 }
 
-interface IosHttpGetAgent {
-    interface Callback {
-        fun onGetResult(url: String, result: String?, error: String)
-    }
-
-    fun httpGet(url: String)
-}
-
-private val iosHttpGetAgent = AtomicReference<IosHttpGetAgent?>(null)
-
-fun setIosHttpGetAgent(agent: IosHttpGetAgent) {
-    iosHttpGetAgent.value = agent.freeze()
-}
-
-private val requestingHashMap = hashMapOf<String, IosHttpGetAgent.Callback>()
-
-fun notifyHttpGetResponse(url: String, result: String?, error: String) {
-    requestingHashMap.remove(url)?.onGetResult(url, result, error)
-}
-
-@Throws(IOException::class)
-actual suspend fun httpGet(url: String): String {
-    return suspendCoroutine { continuation ->
-        val cb = object : IosHttpGetAgent.Callback {
-            override fun onGetResult(url: String, result: String?, error: String) {
-                if (result != null) {
-                    continuation.resume(result)
-                } else {
-                    continuation.resumeWith(Result.failure(IOException(error)))
-                }
-            }
-        }
-        requestingHashMap[url] = cb
-        iosHttpGetAgent.value!!.httpGet(url)
-    }
-
-    //  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    //    [request setHTTPMethod:@"GET"];
-    //    [request setURL:[NSURL URLWithString:url]];
-    //
-    //    NSError *error = nil;
-    //    NSHTTPURLResponse *responseCode = nil;
-    //
-    //    NSData *oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
-    //
-    //    if([responseCode statusCode] != 200){
-    //        NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
-    //        return nil;
-    //    }
-    //
-    //    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
-
-    /*
-    // kotlin/native can't use multi threaded coroutine now.
-    // do it on the swift side...
+fun blockingHttpGetOnIos(url: String): Pair<String?, String> {
     val request = NSMutableURLRequest()
     request.setHTTPMethod("GET")
     request.setURL(NSURL(string = url))
@@ -110,16 +71,34 @@ actual suspend fun httpGet(url: String): String {
         val response = responsePtr.value
         val error = errorPtr.value
         if (error != null) {
-            throw IOException(error.localizedDescription())
+            return null to error.localizedDescription()
         }
         if (response is NSHTTPURLResponse) {
             if (response.statusCode != 200L) {
-                throw IOException("invalid statusCode ${response.statusCode}")
+                return null to "invalid statusCode ${response.statusCode}"
             }
         }
 
-        return responseData?.bytes?.reinterpret<ByteVar>()?.toKString() ?: "null"
+        return responseData?.toKString() to "unknown error"
     }
-    */
 }
 
+inline fun NSData.toKString(): String? {
+    val bytes = bytes?.readBytes(length.toInt())
+    return bytes?.stringFromUtf8()
+}
+
+@Throws(IOException::class)
+actual suspend fun httpGet(url: String): String =
+        suspendCoroutine { continuation ->
+            AsyncRunner.doAsyncWork({
+                blockingHttpGetOnIos(url)
+            }) { result ->
+                println("httpGet on mainThread $url result ${result.first}")
+                if (result.first != null) {
+                    continuation.resume(result.first!!)
+                } else {
+                    continuation.resumeWith(Result.failure(IOException(result.second)))
+                }
+            }
+        }
