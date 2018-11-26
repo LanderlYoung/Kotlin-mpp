@@ -94,7 +94,7 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         (activity as AppCompatActivity?)?.supportActionBar?.let {actionBar ->
-            actionBar.title = getString(R.string.zhihudaily_title)
+            actionBar.title = getString(R.string.app_name)
             actionBar.setDisplayHomeAsUpEnabled(false)
         }
     }
