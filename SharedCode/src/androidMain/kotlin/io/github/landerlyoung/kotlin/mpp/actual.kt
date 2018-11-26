@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
+import java.net.HttpURLConnection
 import java.net.URL
 
 actual fun platformName(): String {
@@ -19,9 +20,16 @@ actual object MyDispatchers {
 actual suspend fun httpGet(url: String): String {
     return withContext(MyDispatchers.Worker) {
         try {
-            val httpConn = URL(url).openConnection()
-            httpConn.connect()
-            httpConn.getInputStream().buffered().readBytes().toString(Charsets.UTF_8)
+            var conn: HttpURLConnection? = null
+            try {
+                val httpConn = URL(url).openConnection() as HttpURLConnection
+                conn = httpConn
+                httpConn.connect()
+                httpConn.inputStream.buffered().readBytes()
+                        .toString(Charsets.UTF_8)
+            } finally {
+                conn?.disconnect()
+            }
         } catch (e: kotlinx.io.IOException) {
             throw  e
         } catch (t: Throwable) {

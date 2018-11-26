@@ -43,7 +43,7 @@ actual object MyDispatchers {
     }
 
     actual val Worker: CoroutineDispatcher
-        get() = throw IllegalArgumentException("""\
+        get() = throw IllegalStateException("""\
                 |Kotlin/Native doesn't support multi threaded coroutines now(2018/11/14)
                 |and the Dispatchers.Main can't work on ios as well
                 |
