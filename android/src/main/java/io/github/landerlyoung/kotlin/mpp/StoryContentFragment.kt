@@ -3,10 +3,6 @@ package io.github.landerlyoung.kotlin.mpp
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.widget.ContentLoadingProgressBar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -15,6 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ContentLoadingProgressBar
+import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.StoryContentPresenter
 

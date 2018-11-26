@@ -3,11 +3,6 @@ package io.github.landerlyoung.kotlin.mpp
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.widget.ContentLoadingProgressBar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,7 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ContentLoadingProgressBar
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.LatestStories
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.Story
 import io.github.landerlyoung.kotlin.mpp.zhihudaily.presenter.LatestStoryPresenter
@@ -93,7 +93,7 @@ class ZhihuDailyLatestStoriesFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        (activity as AppCompatActivity?)?.supportActionBar?.let {actionBar ->
+        (activity as AppCompatActivity?)?.supportActionBar?.let { actionBar ->
             actionBar.title = getString(R.string.app_name)
             actionBar.setDisplayHomeAsUpEnabled(false)
         }
