@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/cover"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_margin="@dimen/text_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
