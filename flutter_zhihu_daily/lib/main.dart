@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zhihu_daily/model.dart';
 import 'package:flutter_zhihu_daily/repository.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
+      theme: ThemeData(
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -23,21 +23,21 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new LatestStoryPage(title: '知乎日报'),
+      home: LatestStoryPage(title: '知乎日报'),
     );
   }
 }
 
 class LatestStoryPage extends StatefulWidget {
-  final Future<LatestStories> latestStories = ZhihuDailyRepository
-      .getLatestStories();
+  final Future<LatestStories> latestStories =
+  ZhihuDailyRepository.getLatestStories();
 
   LatestStoryPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _LatestStoryPageState createState() => new _LatestStoryPageState();
+  _LatestStoryPageState createState() => _LatestStoryPageState();
 }
 
 class _LatestStoryPageState extends State<LatestStoryPage> {
@@ -56,40 +56,31 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            new FutureBuilder<LatestStories>(
-                future: widget.latestStories,
-                builder: (context, stories) {
-                  if (stories.hasData) {
-                    return Text(stories.data.stories[0].title);
-                  } else if (stories.hasError) {
-                    return Text("error: ${stories.error}");
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                })
-          ],
+      body: FutureBuilder<LatestStories>(
+          future: widget.latestStories,
+          builder: (context, future) {
+            if (future.hasData) {
+              var data = future.data;
+              return ListView.builder(
+                  padding: EdgeInsets.all(8.0),
+                  itemCount: data.stories.length,
+                  itemExtent: 20.0,
+                  itemBuilder: (context, index) {
+                    return Text("story ${data.stories[index].title}");
+                  });
+            } else if (future.hasError) {
+              return Text("error loading data ${future.data}");
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }
         ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
