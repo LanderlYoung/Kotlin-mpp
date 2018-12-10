@@ -34,7 +34,7 @@ Future<String> makeStoryContextHtml(StoryContent story)  async => """
 </html>
 """;
 
-String _headerImageStyle = """
+final String _headerImageStyle = """
 .img-wrap {
     position: relative;
     max-height: 375px;
