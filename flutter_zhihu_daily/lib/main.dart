@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_zhihu_daily/model.dart';
 import 'package:flutter_zhihu_daily/repository.dart';
+import 'package:tuple/tuple.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) =>
+      MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -24,8 +25,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: LatestStoryPage(title: '知乎日报'),
+        routes:
+        <String, WidgetBuilder>{
+          // add routes
+        },
     );
-  }
 }
 
 class LatestStoryPage extends StatefulWidget {
@@ -42,41 +46,44 @@ class LatestStoryPage extends StatefulWidget {
 
 class _LatestStoryPageState extends State<LatestStoryPage> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: FutureBuilder<LatestStories>(
-          future: widget.latestStories,
-          builder: (context, future) {
-            if (future.hasData) {
-              var data = future.data;
-              return ListView.builder(
-                  padding: EdgeInsets.all(8.0),
-                  itemCount: data.stories.length,
-                  itemBuilder: (context, index) {
-                    return _buildListItem(context, data.stories[index]);
-                  });
-            } else if (future.hasError) {
-              return Center(
-                  child: Text("error loading data ${future.data}")
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-    );
-  }
+        body: FutureBuilder<LatestStories>(
+            future: widget.latestStories,
+            builder: (context, future) {
+              if (future.hasData) {
+                var data = future.data;
+                return ListView.builder(
+                    padding: EdgeInsets.all(8.0),
+                    itemCount: data.stories.length,
+                    itemBuilder: (context, index) =>
+                        _buildListItem(context, data.stories[index]));
+              } else if (future.hasError) {
+                return Center(
+                    child: Text("error loading data ${future.error}"));
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+      );
 
   Widget _buildListItem(BuildContext context, Story story) =>
-      Card(
+      GestureDetector(
+          onTapUp: (g) {
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => StoryContentPage(storyId: story.id)
+                )
+            );
+          },
+          child: Card(
           elevation: 4,
-          child:
-          Container(
+              child: Container(
             padding: EdgeInsets.all(8.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -88,11 +95,66 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
                 Padding(padding: EdgeInsets.only(left: 8)),
                 Flexible(
                     child: Container(
-                      child: Text(
-                          story.title,
-                          overflow: TextOverflow.ellipsis),
+                      child: Text(story.title, overflow: TextOverflow.ellipsis),
                     ))
               ],
-            ),)
+            ),
+              )));
+}
+
+class StoryContentPage extends StatefulWidget {
+  final Future<Tuple2<StoryContent, String>> storyContent;
+  String _title;
+
+  StoryContentPage({Key key, @required int storyId})
+      :
+        storyContent = ZhihuDailyRepository.getStoryContent(storyId),
+        super(key: key) {
+    _title = "loading content of $storyId";
+  }
+
+  @override
+  State<StatefulWidget> createState() => _StoryContentPageState();
+}
+
+class _StoryContentPageState extends State<StoryContentPage> {
+  @override
+  void initState() {
+    super.initState();
+    widget.storyContent.then((value) {
+      setState(() {
+        widget._title = value.item1.title;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      Scaffold(
+          appBar:
+          AppBar(
+            title: Text(widget._title),
+          ),
+          body
+              : FutureBuilder<Tuple2<StoryContent, String>>(
+              future: widget.storyContent,
+              builder: (context, future) {
+                if (future.hasData) {
+                  var data = future.data;
+                  return Text(data.item2);
+                } else if (future.hasError) {
+                  return Center(
+                      child: Text("error loading data ${future.error}"));
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }
+          )
       );
+
+  Widget _buildStoryContent(String html) {
+    return null;
+  }
 }

@@ -56,8 +56,8 @@ class StoryContent {
   final int type;
   final String title;
   final String body;
-  final List js;
-  final List css;
+  final List<String> js;
+  final List<String> css;
   final String share_url;
   final List recommenders;
   final String ga_prefix;
