@@ -36,6 +36,18 @@ class Story {
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$StoryToJson(this);
+
+  String get coverImage {
+    if (image != null) {
+      return image;
+    } else if (images != null && images.isNotEmpty) {
+      return images[0];
+    } else {
+
+      return null;
+    }
+  }
+
 }
 
 @JsonSerializable()

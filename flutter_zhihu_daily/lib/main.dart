@@ -41,19 +41,6 @@ class LatestStoryPage extends StatefulWidget {
 }
 
 class _LatestStoryPageState extends State<LatestStoryPage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,12 +55,13 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
               return ListView.builder(
                   padding: EdgeInsets.all(8.0),
                   itemCount: data.stories.length,
-                  itemExtent: 20.0,
                   itemBuilder: (context, index) {
-                    return Text("story ${data.stories[index].title}");
+                    return _buildListItem(context, data.stories[index]);
                   });
             } else if (future.hasError) {
-              return Text("error loading data ${future.data}");
+              return Center(
+                  child: Text("error loading data ${future.data}")
+              );
             } else {
               return Center(
                 child: CircularProgressIndicator(),
@@ -83,4 +71,28 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
         ),
     );
   }
+
+  Widget _buildListItem(BuildContext context, Story story) =>
+      Card(
+          elevation: 4,
+          child:
+          Container(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Image(
+                    image: NetworkImage(story.coverImage),
+                    width: 72,
+                    height: 72),
+                Padding(padding: EdgeInsets.only(left: 8)),
+                Flexible(
+                    child: Container(
+                      child: Text(
+                          story.title,
+                          overflow: TextOverflow.ellipsis),
+                    ))
+              ],
+            ),)
+      );
 }
