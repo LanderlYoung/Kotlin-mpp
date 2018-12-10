@@ -34,9 +34,6 @@ class MyApp extends StatelessWidget {
 }
 
 class LatestStoryPage extends StatefulWidget {
-  final Future<LatestStories> latestStories =
-  ZhihuDailyRepository.getLatestStories();
-
   LatestStoryPage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -46,6 +43,9 @@ class LatestStoryPage extends StatefulWidget {
 }
 
 class _LatestStoryPageState extends State<LatestStoryPage> {
+  final Future<LatestStories> latestStories =
+  ZhihuDailyRepository.getLatestStories();
+
   @override
   Widget build(BuildContext context) =>
       Scaffold(
@@ -53,7 +53,7 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
           title: Text(widget.title),
         ),
         body: FutureBuilder<LatestStories>(
-            future: widget.latestStories,
+            future: latestStories,
             builder: (context, future) {
               if (future.hasData) {
                 var data = future.data;
@@ -76,7 +76,8 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
   Widget _buildListItem(BuildContext context, Story story) =>
       GestureDetector(
           onTapUp: (g) {
-            Navigator.of(context).push(
+            Navigator.push(
+                context,
                 MaterialPageRoute(
                     builder: (context) => StoryContentPage(storyId: story.id)
                 )
@@ -104,27 +105,34 @@ class _LatestStoryPageState extends State<LatestStoryPage> {
 }
 
 class StoryContentPage extends StatefulWidget {
-  final Future<Tuple2<StoryContent, String>> storyContent;
-  String _title;
-
+  final int storyId;
   StoryContentPage({Key key, @required int storyId})
       :
-        storyContent = ZhihuDailyRepository.getStoryContent(storyId),
-        super(key: key) {
-    _title = "loading content of $storyId";
-  }
+        storyId=storyId,
+        super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _StoryContentPageState();
+  State<StatefulWidget> createState() => _StoryContentPageState(storyId);
 }
 
 class _StoryContentPageState extends State<StoryContentPage> {
+  final Future<Tuple2<StoryContent, String>> storyContent;
+  final int storyId;
+  String _title;
+
+  _StoryContentPageState(int storyId)
+      :
+        storyId=storyId,
+        storyContent = ZhihuDailyRepository.getStoryContent(storyId),
+        super();
+
   @override
   void initState() {
     super.initState();
-    widget.storyContent.then((value) {
+    _title = "loading content of $storyId";
+    storyContent.then((value) {
       setState(() {
-        widget._title = value.item1.title;
+        _title = value.item1.title;
       });
     });
   }
@@ -134,11 +142,11 @@ class _StoryContentPageState extends State<StoryContentPage> {
       Scaffold(
           appBar:
           AppBar(
-            title: Text(widget._title),
+            title: Text(_title),
           ),
           body
               : FutureBuilder<Tuple2<StoryContent, String>>(
-              future: widget.storyContent,
+              future: storyContent,
               builder: (context, future) {
                 if (future.hasData) {
                   return _buildStoryContent(context, future.data.item2);
