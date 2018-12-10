@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter_zhihu_daily/model.dart';
 import 'package:flutter_zhihu_daily/repository.dart';
 import 'package:tuple/tuple.dart';
@@ -140,8 +141,7 @@ class _StoryContentPageState extends State<StoryContentPage> {
               future: widget.storyContent,
               builder: (context, future) {
                 if (future.hasData) {
-                  var data = future.data;
-                  return Text(data.item2);
+                  return _buildStoryContent(context, future.data.item2);
                 } else if (future.hasError) {
                   return Center(
                       child: Text("error loading data ${future.error}"));
@@ -154,7 +154,13 @@ class _StoryContentPageState extends State<StoryContentPage> {
           )
       );
 
-  Widget _buildStoryContent(String html) {
-    return null;
-  }
+  Widget _buildStoryContent(BuildContext context, String html) =>
+      WebviewScaffold(
+          withJavascript: true,
+          withZoom: false,
+          allowFileURLs: false,
+          url: Uri.dataFromString(
+              html, mimeType: 'text/html', parameters: {'charset': "utf-8"}
+          ).toString()
+      );
 }
