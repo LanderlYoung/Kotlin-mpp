@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter_zhihu_daily/model.dart';
 import 'package:flutter_zhihu_daily/repository.dart';
 import 'package:tuple/tuple.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp(MyApp());
 
@@ -163,11 +163,9 @@ class _StoryContentPageState extends State<StoryContentPage> {
       );
 
   Widget _buildStoryContent(BuildContext context, String html) =>
-      WebviewScaffold(
-          withJavascript: true,
-          withZoom: false,
-          allowFileURLs: false,
-          url: Uri.dataFromString(
+      WebView(
+          javaScriptMode: JavaScriptMode.unrestricted,
+          initialUrl: Uri.dataFromString(
               html, mimeType: 'text/html', parameters: {'charset': "utf-8"}
           ).toString()
       );
